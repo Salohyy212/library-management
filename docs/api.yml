@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Library API
   version: 1.0.0
-  description: STD22001
+  description: STD22062
 servers:
   - url: https://library.com
 paths:
@@ -19,6 +19,20 @@ paths:
           schema:
             type: string
         #TODO3: add parameter to filter books by intervals of dates of the releaseDate
+         - in: query
+          name: releaseDateStart
+          description: Filter books by a minimum release date
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: releaseDateEnd
+          description: Filter books by a maximum release date
+          required: false
+          schema:
+            type: string
+            format: date
       responses:
         200:
           description: The list of filtered books
@@ -49,6 +63,35 @@ paths:
                   $ref: '#/components/schemas/Book'
   /authors:
   #TODO2: complete GET (can be filtered by name) - PUT - DELETE
+     put:
+      summary: Create or update an author
+      operationId: crupdateAuthor
+      requestBody:
+        content:
+           application/json:
+               schema:
+                  $ref: '#/components/schemas/author'
+      responses:
+          200:
+            description: The created or updated author
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/author'
+    delete:
+      summary: Delete an author
+      operationId: deleteAuthor
+      parameters:
+        - in: query
+          name: authorName
+          description: Name of the author to delete
+          required: true
+          schema:
+            type: string
+      responses:
+          204:
+            description: Author successfully deleted
+            
 components:
   schemas:
     Book:
@@ -60,6 +103,7 @@ components:
           type: string
         author:
           #TODO1: set it as a component with properties : id, name, sex (M or F)
+           $ref: '#/components/schemas/author'
           type: string
         pageNumbers:
           type: integer
@@ -72,3 +116,15 @@ components:
         releaseDate:
           type: string
           format: date
+    author:
+       type: object
+       properties:
+         id:
+           type: string
+         name:
+           type: string
+         sex:
+           type: string
+           enum:
+             - M
+             - F
