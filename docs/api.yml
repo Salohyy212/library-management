@@ -157,25 +157,12 @@ components:
           type: string
           format: date
     Book:
-      type: object
-      properties:
-        id:
-          type: string
-        bookName:
-          type: string
-        author:
-          $ref: '#/components/schemas/Author'
-        pageNumbers:
-          type: integer
-        topic:
-          type: string
-          enum:
-            - ROMANCE
-            - COMEDY
-            - OTHER
-        releaseDate:
-          type: string
-          format: date
+      allOf:
+        - $ref: '#/components/schemas/CrupdateBook'
+        - type: object
+          properties:
+            author:
+              $ref: '#/components/schemas/author'
     Author:
       type: object
       properties:
