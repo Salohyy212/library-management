@@ -231,6 +231,66 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
+  /topics:
+    get:
+      tags:
+        - "Topic"
+      summary: Get all topics
+      description: The returned topics are ordered by name.
+      operationId: getTopics
+      parameters:
+        - in: query
+          name: name
+          description: Filter return topic by given name
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: The list of filtered topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Topic'
+    put:
+      tags:
+        - "Topic"
+      summary: Create or update a list of topic
+      operationId: crupdateTopic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CrupdateTopic'
+      responses:
+        200:
+          description: The list of created or updated topic
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Topic'
+  /topics/{topicId}:
+      delete:
+        tags:
+          - "Topic"
+        summary: Remove a topic by id
+        operationId: deleteTopic
+        parameters:
+          - in: path
+            name: id
+            description: Remove topic by given id
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: Topic deleted successfully                
 
 components:
   schemas:
@@ -293,34 +353,30 @@ components:
           type: string
         authorId:
           type: string
-#2-b
-# i- "UpdateBookAuthor" est conçu pour servir un but précis : associer un livre à un auteur. C'est pourquoi il inclut uniquement les identifiants du livre et de l'auteur.
-# ii- Si, dans un cas d'utilisation spécifique, vous devez mettre à jour des propriétés du livre ou de l'auteur lors de leur association, vous devriez inclure ces propriétés dans "UpdateBookAuthor"
+    CrupdateTopic:
+      type: object
+      properties:
+        topicName:
+          type: string
+          example: 'Romance'
 
-#4
-#a- Oui, il est possible d'utiliser des entêtes de requête pour gérer la pagination. Cependant, cela n'est pas couramment pratiqué car les paramètres de requête et de chemin sont plus appropriés pour spécifier des filtres et des options de pagination. 
-#b- Non, il n'est généralement pas recommandé de gérer la pagination à travers les entêtes de la requête. Utiliser des paramètres de requête ou de chemin est plus conforme aux conventions RESTful et facilite la compréhension des requêtes. 
-  
-#TD-Video
-#Pour supprimer plusieurs authors a la fois en une requête sans avoir a spécifier chaque id:
-#/authors:
-#  delete:
-#    summary: Delete multiple authors
-#    operationId: deleteAuthors
-#    requestBody:
-#      description: List of author IDs to be deleted
-#      required: true
-#      content:
-#        application/json:
-#          schema:
-#            type: array
-#              items:
-#                type: string
-#    responses:
-#      200:
-#        description: The authors have been deleted successfully
-
-    
-    
+    Topic:
+        type: object
+        allOf:
+          - properties:
+              id:
+                type: string
+          - $ref: '#/components/schemas/CrupdateTopic'
       
        
+ 
+  
+ 
+      
+     
+      
+   
+      
+      
+         
+   
