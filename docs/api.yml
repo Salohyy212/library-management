@@ -71,6 +71,45 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
+  /books/{bookId}/authors/{authorId}:
+    put:
+      summary: Associate a single book to one author
+      tags:
+        - Books
+      parameters:
+        - name: bookId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: authorId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: The list of authors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /books/authors:
+    put:
+      summary: Associate some books to some authors
+      tags:
+        - Books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                $ref: '#/components/schemas/UpdateBookAuthor'
+            responses:
+              200:
+                description: Updated books with authors
   /authors:
     get:
       summary: Get all authors
@@ -157,12 +196,25 @@ components:
           type: string
           format: date
     Book:
-      allOf:
-        - $ref: '#/components/schemas/CrupdateBook'
-        - type: object
-          properties:
-            author:
-              $ref: '#/components/schemas/author'
+      type: object
+      properties:
+        id:
+          type: string
+        bookName:
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        pageNumbers:
+          type: integer
+        topic:
+          type: string
+          enum:
+            - ROMANCE
+            - COMEDY
+            - OTHER
+        releaseDate:
+          type: string
+          format: date
     Author:
       type: object
       properties:
@@ -177,7 +229,20 @@ components:
       enum:
         - M
         - F
+    UpdateBookAuthor:
+      type: object
+      properties:
+        bookId:
+          type: string
+        authorId:
+          type: string
+#2-b
+# i- "UpdateBookAuthor" est conçu pour servir un but précis : associer un livre à un auteur. C'est pourquoi il inclut uniquement les identifiants du livre et de l'auteur.
+# ii- Si, dans un cas d'utilisation spécifique, vous devez mettre à jour des propriétés du livre ou de l'auteur lors de leur association, vous devriez inclure ces propriétés dans "UpdateBookAuthor"
    
-   
+  
+    
+    
+    
       
        
