@@ -26,8 +26,8 @@ paths:
         - in: query
           name: releaseDateMin
           description: |
-            If  `releaseDateMax` is not provided, `releaseDateMin` is ignored.
-            `releaseDateMin` can not be after `releaseDateMax`.
+            If `releaseDateMax` is not provided, `releaseDateMin` is ignored.
+            `releaseDateMin` cannot be after `releaseDateMax`.
           schema:
             type: string
             format: date
@@ -35,11 +35,27 @@ paths:
         - in: query
           name: releaseDateMax
           description: |
-            If  `releaseDateMin` is not provided, `releaseDateMax` is ignored.
-            `releaseDateMax` can not be after `releaseDateMin`.
+            If `releaseDateMin` is not provided, `releaseDateMax` is ignored.
+            `releaseDateMax` cannot be before `releaseDateMin`.
           schema:
             type: string
             format: date
+          required: false
+        - in: query
+          name: page
+          description:
+            The page number to display (default: 1)
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: pageSize
+          description:
+            Page size (default: 50)
+          schema:
+            type: integer
+            default: 50
           required: false
       responses:
         200:
@@ -50,6 +66,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
+
+
     put:
       tags:
         - Books
@@ -175,6 +193,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Author'
+  /authors/{page}/{pageSize}:
+    get:
+      summary: Get a specific page of authors
+      operationId: getAuthorsByPage
+      tags:
+        - Authors
+      parameters:
+        - name: authorName
+          in: query
+          description: Filter returned authors by given name. If not provided, then the list is not filtered.
+          schema:
+            type: string
+          required: false
+        - name: page
+          in: path
+          description:
+            The page number to display (default: 1)
+          schema:
+            type: integer
+            default: 1
+          required: true
+        - name: pageSize
+          in: path
+          description:
+            Page size (default: 50)
+          schema:
+            type: integer
+            default: 50
+          required: true
+      responses:
+        200:
+          description: The list of filtered authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+
 components:
   schemas:
     CrupdateBook:
@@ -239,7 +296,10 @@ components:
 #2-b
 # i- "UpdateBookAuthor" est conçu pour servir un but précis : associer un livre à un auteur. C'est pourquoi il inclut uniquement les identifiants du livre et de l'auteur.
 # ii- Si, dans un cas d'utilisation spécifique, vous devez mettre à jour des propriétés du livre ou de l'auteur lors de leur association, vous devriez inclure ces propriétés dans "UpdateBookAuthor"
-   
+
+#4
+#a- Oui, il est possible d'utiliser des entêtes de requête pour gérer la pagination. Cependant, cela n'est pas couramment pratiqué car les paramètres de requête et de chemin sont plus appropriés pour spécifier des filtres et des options de pagination. 
+#b- Non, il n'est généralement pas recommandé de gérer la pagination à travers les entêtes de la requête. Utiliser des paramètres de requête ou de chemin est plus conforme aux conventions RESTful et facilite la compréhension des requêtes. 
   
     
     
