@@ -8,6 +8,7 @@ servers:
 tags:
   - Books
   - Authors
+  - Topics
 paths:
   /books:
     get:
@@ -234,7 +235,7 @@ paths:
   /topics:
     get:
       tags:
-        - "Topic"
+        - Topics
       summary: Get all topics
       description: The returned topics are ordered by name.
       operationId: getTopics
@@ -256,7 +257,7 @@ paths:
                   $ref: '#/components/schemas/Topic'
     put:
       tags:
-        - "Topic"
+        - Topics
       summary: Create or update a list of topic
       operationId: crupdateTopic
       requestBody:
@@ -278,7 +279,7 @@ paths:
   /topics/{topicId}:
       delete:
         tags:
-          - "Topic"
+          - Topics
         summary: Remove a topic by id
         operationId: deleteTopic
         parameters:
