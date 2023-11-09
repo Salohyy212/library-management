@@ -52,6 +52,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
+        requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportBook'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -69,7 +75,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/CrupdateBook'
+                $ref: '#/components/schemas/ImportBook'
       responses:
         200:
           description: The list of created or updated books
@@ -136,6 +142,20 @@ paths:
           $ref: '#/components/responses/403'
         500:
           $ref: '#/components/responses/500'
+   /books/import:
+    post:
+      summary: Import books
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportBook'
+        content:
+            schema:
+              $ref: '#/components/schemas/ImportBookExcel'
   /authors:
     get:
       summary: Get all authors
@@ -160,6 +180,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
+        requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportAuthor'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -177,7 +203,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Author'
+                $ref: '#/components/schemas/ImportAuthor'
       responses:
         200:
           description: The list of created or updated authors
@@ -219,6 +245,30 @@ paths:
           $ref: '#/components/responses/403'
         500:
           $ref: '#/components/responses/500'
+  /authors/import:
+    post:
+      summary: Import authors
+      tags:
+        - Authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportAuthor'
+        content:
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              $ref: '#/components/schemas/ImportAuthorExcel'
+      responses:
+        200:
+          description: The list of imported authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
   /authors/{page}/{pageSize}:
     get:
       summary: Get a specific page of authors
@@ -351,7 +401,65 @@ components:
           properties:
             data:
               type: object
-  parameters:
+    ImportBook:
+      oneOf:
+        - $ref: '#/components/schemas/ImportBookJson'
+        - $ref: '#/components/schemas/ImportBookExcel'
+    ImportBookJson:
+      type: object
+      properties:
+        bookName:
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        pageNumbers:
+          type: integer
+        topic:
+          type: string
+          enum:
+            - ROMANCE
+            - COMEDY
+            - OTHER
+        releaseDate:
+          type: string
+          format: date
+    ImportBookExcel:
+      type: object
+      properties:
+        bookName:
+          type: string
+        author:
+          type: string
+        pageNumbers:
+          type: integer
+        topic:
+          type: string
+        releaseDate:
+          type: string
+          format: date
+        idAuthor:
+          type: string
+    ImportAuthor:
+      oneOf:
+        - $ref: '#/components/schemas/ImportAuthorJson'
+        - $ref: '#/components/schemas/ImportAuthorExcel'
+    ImportAuthorJson:
+      type: object
+      properties:
+        authorName:
+          type: string
+        sex:
+          $ref: '#/components/schemas/Sex'
+    ImportAuthorExcel:
+      type: object
+      properties:
+        authorName:
+          type: string
+        sex:
+          type: string
+        idAuthor:
+          type: string
+parameters:
     queryPage:
       in: query
       name: page
