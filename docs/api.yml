@@ -52,12 +52,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
-        requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ImportBook'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -142,22 +136,23 @@ paths:
           $ref: '#/components/responses/403'
         500:
           $ref: '#/components/responses/500'
-    /books/import:
-      post:
-        summary: Import books
-        tags:
-          - Books
-        requestBody:
-          required: true
-          content:
-            oneOf:
-              - application/json:
-                  schema:
-                    $ref: '#/components/schemas/ImportBook'
-              - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-                  schema:
-                    $ref: '#/components/schemas/ImportBookExcel'
-
+  /books/import:
+    post:
+      summary: Import books
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          oneOf:
+            - application/json:
+                schema:
+                  $ref: '#/components/schemas/ImportBook'
+            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                schema:
+                  $ref: '#/components/schemas/ImportBookExcel'
+  
+  
   /authors:
     get:
       summary: Get all authors
@@ -182,12 +177,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
-        requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ImportAuthor'
         400:
           $ref: '#/components/responses/400'
         403:
