@@ -41,22 +41,8 @@ paths:
             type: string
             format: date
           required: false
-        - in: query
-          name: page
-          description:
-            The page number to display (default: 1)
-          schema:
-            type: integer
-            default: 1
-          required: false
-        - in: query
-          name: pageSize
-          description:
-            Page size (default: 50)
-          schema:
-            type: integer
-            default: 50
-          required: false
+       - $ref : '#/components/parameters/queryPage'
+       - $ref : '#/components/parameters/queryPagesize'
       responses:
         200:
           description: The list of filtered books
@@ -66,8 +52,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
-
-
     put:
       tags:
         - Books
@@ -206,22 +190,8 @@ paths:
           schema:
             type: string
           required: false
-        - name: page
-          in: path
-          description:
-            The page number to display (default: 1)
-          schema:
-            type: integer
-            default: 1
-          required: true
-        - name: pageSize
-          in: path
-          description:
-            Page size (default: 50)
-          schema:
-            type: integer
-            default: 50
-          required: true
+        - $ref : '#/components/parameters/pathPage'
+        - $ref : '#/components/parameters/pathPagesize'
       responses:
         200:
           description: The list of filtered authors
@@ -293,34 +263,32 @@ components:
           type: string
         authorId:
           type: string
-#2-b
-# i- "UpdateBookAuthor" est conçu pour servir un but précis : associer un livre à un auteur. C'est pourquoi il inclut uniquement les identifiants du livre et de l'auteur.
-# ii- Si, dans un cas d'utilisation spécifique, vous devez mettre à jour des propriétés du livre ou de l'auteur lors de leur association, vous devriez inclure ces propriétés dans "UpdateBookAuthor"
-
-#4
-#a- Oui, il est possible d'utiliser des entêtes de requête pour gérer la pagination. Cependant, cela n'est pas couramment pratiqué car les paramètres de requête et de chemin sont plus appropriés pour spécifier des filtres et des options de pagination. 
-#b- Non, il n'est généralement pas recommandé de gérer la pagination à travers les entêtes de la requête. Utiliser des paramètres de requête ou de chemin est plus conforme aux conventions RESTful et facilite la compréhension des requêtes. 
-  
-#TD-Video
-#Pour supprimer plusieurs authors a la fois en une requête sans avoir a spécifier chaque id:
-#/authors:
-#  delete:
-#    summary: Delete multiple authors
-#    operationId: deleteAuthors
-#    requestBody:
-#      description: List of author IDs to be deleted
-#      required: true
-#      content:
-#        application/json:
-#          schema:
-#            type: array
-#              items:
-#                type: string
-#    responses:
-#      200:
-#        description: The authors have been deleted successfully
-
-    
-    
-      
-       
+  parameters:
+    queryPage:
+      in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        default: 1
+    queryPagesize:
+      name: pagesize
+      in: query
+      schema:
+        type: integer
+        default: 50
+      required: false
+    pathPage:
+      in: path
+      name: pathPage
+      required: true
+      schema:
+        type: integer
+        default: 1
+    pathPagesize:
+      in: path
+      name: pathPagesize
+      schema:
+        type: integer
+        default: 50
+      required: true
