@@ -52,6 +52,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
     put:
       tags:
         - Books
@@ -73,6 +79,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /books/{bookId}/authors/{authorId}:
     put:
       summary: Associate a single book to one author
@@ -96,6 +108,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /books/authors:
     put:
       summary: Associate some books to some authors
@@ -112,6 +130,12 @@ paths:
             responses:
               200:
                 description: Updated books with authors
+              400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors:
     get:
       summary: Get all authors
@@ -136,6 +160,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
     put:
       summary: Create or update authors
       operationId: crupdateAuthors
@@ -157,6 +187,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors/{aId}:
     delete:
       summary: Delete an author
@@ -177,6 +213,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Author'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors/{page}/{pageSize}:
     get:
       summary: Get a specific page of authors
@@ -201,6 +243,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
 
 components:
   schemas:
@@ -263,6 +311,46 @@ components:
           type: string
         authorId:
           type: string
+    ApiResponse:
+      type: object
+      properties:
+        statut:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+        body:
+          type: object
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+    BadRequest:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+    Forbidden:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+    InternalServerError:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
   parameters:
     queryPage:
       in: query
@@ -292,3 +380,28 @@ components:
         type: integer
         default: 50
       required: true
+  responses:
+      200:
+        description: Requet successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessResponse'
+      400:
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BadRequest'
+      403:
+        description: Forbidden
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Forbidden'
+      500:
+        description: Internal server error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalServerError'
