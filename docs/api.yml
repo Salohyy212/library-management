@@ -41,8 +41,8 @@ paths:
             type: string
             format: date
           required: false
-       - $ref : '#/components/parameters/queryPage'
-       - $ref : '#/components/parameters/queryPagesize'
+        - $ref : '#/components/parameters/queryPage'
+        - $ref : '#/components/parameters/queryPagesize'
       responses:
         200:
           description: The list of filtered books
@@ -142,20 +142,22 @@ paths:
           $ref: '#/components/responses/403'
         500:
           $ref: '#/components/responses/500'
-   /books/import:
-    post:
-      summary: Import books
-      tags:
-        - Books
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ImportBook'
-        content:
-            schema:
-              $ref: '#/components/schemas/ImportBookExcel'
+    /books/import:
+      post:
+        summary: Import books
+        tags:
+          - Books
+        requestBody:
+          required: true
+          content:
+            oneOf:
+              - application/json:
+                  schema:
+                    $ref: '#/components/schemas/ImportBook'
+              - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                  schema:
+                    $ref: '#/components/schemas/ImportBookExcel'
+
   /authors:
     get:
       summary: Get all authors
@@ -253,13 +255,13 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ImportAuthor'
-        content:
-          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-            schema:
-              $ref: '#/components/schemas/ImportAuthorExcel'
+          oneOf:
+            - application/json:
+                schema:
+                  $ref: '#/components/schemas/ImportAuthor'
+            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+                schema:
+                  $ref: '#/components/schemas/ImportAuthorExcel'
       responses:
         200:
           description: The list of imported authors
@@ -282,8 +284,8 @@ paths:
           schema:
             type: string
           required: false
-        - $ref : '#/components/parameters/pathPage'
-        - $ref : '#/components/parameters/pathPagesize'
+        - $ref: '#/components/parameters/pathPage'
+        - $ref: '#/components/parameters/pathPagesize'
       responses:
         200:
           description: The list of filtered authors
@@ -293,12 +295,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
-        400:
-          $ref: '#/components/responses/400'
-        403:
-          $ref: '#/components/responses/403'
-        500:
-          $ref: '#/components/responses/500'
+
 
 components:
   schemas:
@@ -459,7 +456,7 @@ components:
           type: string
         idAuthor:
           type: string
-parameters:
+  parameters:
     queryPage:
       in: query
       name: page
@@ -489,27 +486,27 @@ parameters:
         default: 50
       required: true
   responses:
-      200:
-        description: Requet successfully
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SuccessResponse'
-      400:
-        description: Bad request
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BadRequest'
-      403:
-        description: Forbidden
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Forbidden'
-      500:
-        description: Internal server error
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/InternalServerError'
+    200:
+      description: Requet successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequest'
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Forbidden'
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerError'
