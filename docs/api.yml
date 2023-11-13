@@ -115,15 +115,15 @@ paths:
               items:
                 type: object
                 $ref: '#/components/schemas/UpdateBookAuthor'
-            responses:
-              200:
-                description: Updated books with authors
-              400:
-                $ref: '#/components/responses/400'
-              403:
-                $ref: '#/components/responses/403'
-              500:
-                $ref: '#/components/responses/500'
+      responses:
+          200:
+            description: Updated books with authors
+          400:
+            $ref: '#/components/responses/400'
+          403:
+            $ref: '#/components/responses/403'
+          500:
+            $ref: '#/components/responses/500'
   /books/import:
     post:
       summary: Import books
@@ -132,13 +132,22 @@ paths:
       requestBody:
         required: true
         content:
-          oneOf:
-            - application/json:
-                schema:
-                  $ref: '#/components/schemas/ImportBook'
-            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-                schema:
-                  $ref: '#/components/schemas/ImportBookExcel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportBook'
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              $ref: '#/components/schemas/ImportBookExcel'
+
+      responses:
+        200:
+          $ref: '#/components/responses/BookList_200'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors:
     get:
       summary: Get all authors
@@ -156,13 +165,7 @@ paths:
           required: false
       responses:
         200:
-          description: The list of filtered authors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/AuthorList_200'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -183,13 +186,7 @@ paths:
                 $ref: '#/components/schemas/ImportAuthor'
       responses:
         200:
-          description: The list of created or updated authors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/AuthorList_200'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -226,22 +223,22 @@ paths:
       requestBody:
         required: true
         content:
-          oneOf:
-            - application/json:
-                schema:
-                  $ref: '#/components/schemas/ImportAuthor'
-            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-                schema:
-                  $ref: '#/components/schemas/ImportAuthorExcel'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportAuthor'
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              $ref: '#/components/schemas/ImportAuthorExcel'
+
       responses:
         200:
-          description: The list of imported authors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/AuthorList_200'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors/{page}/{pageSize}:
     get:
       summary: Get a specific page of authors
@@ -499,3 +496,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerErrorBody'
+     
+
+    
+    
+  
+  
+
+     
+        
+       
+      
+       
+        
+         
+      
+      
+           
