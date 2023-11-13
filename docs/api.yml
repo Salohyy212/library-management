@@ -45,13 +45,7 @@ paths:
         - $ref : '#/components/parameters/queryPagesize'
       responses:
         200:
-          description: The list of filtered books
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
+          $ref: '#/components/responses/BookList_200'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -72,13 +66,7 @@ paths:
                 $ref: '#/components/schemas/ImportBook'
       responses:
         200:
-          description: The list of created or updated books
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
+          $ref: '#/components/responses/BookList_200'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -131,11 +119,11 @@ paths:
               200:
                 description: Updated books with authors
               400:
-          $ref: '#/components/responses/400'
-        403:
-          $ref: '#/components/responses/403'
-        500:
-          $ref: '#/components/responses/500'
+                $ref: '#/components/responses/400'
+              403:
+                $ref: '#/components/responses/403'
+              500:
+                $ref: '#/components/responses/500'
   /books/import:
     post:
       summary: Import books
@@ -151,8 +139,6 @@ paths:
             - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
                 schema:
                   $ref: '#/components/schemas/ImportBookExcel'
-  
-  
   /authors:
     get:
       summary: Get all authors
@@ -225,11 +211,7 @@ paths:
           required: true
       responses:
         200:
-          description: The author deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/AuthorList_200'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -277,13 +259,7 @@ paths:
         - $ref: '#/components/parameters/pathPagesize'
       responses:
         200:
-          description: The list of filtered authors
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Author'
+          $ref: '#/components/responses/AuthorList_200'
 
 
 components:
@@ -347,46 +323,60 @@ components:
           type: string
         authorId:
           type: string
-    ApiResponse:
+
+    ResponseStatus:
       type: object
       properties:
-        statut:
-          type: object
-          properties:
-            code:
-              type: integer
-            message:
-              type: string
-        body:
-          type: object
-    SuccessResponse:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+    ResponseBodyTemplate:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+    BookListBody:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
-    BadRequest:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+        - properties:
+            body:
+              type: array
+              items:
+                $ref: '#/components/schemas/Book'
+    AuthorListBody:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
-    Forbidden:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+        - properties:
+            body:
+              type: array
+              items:
+                $ref: '#/components/schemas/Author'
+    BadRequestBody:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
-    InternalServerError:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+      example:
+         status:
+           code: 400
+           message: BAD REQUEST
+         body: {}
+    ForbiddenBody:
       allOf:
-        - $ref: '#/components/schemas/ApiResponse'
-        - type: object
-          properties:
-            data:
-              type: object
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+      example:
+        status:
+          code: 403
+          message: FORBIDDEN
+        body: {}
+    InternalServerErrorBody:
+      allOf:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+      example:
+        status:
+          code: 500
+          message: INTERNAL SERVER ERROR
+        body: {}
     ImportBook:
       oneOf:
         - $ref: '#/components/schemas/ImportBookJson'
@@ -475,27 +465,37 @@ components:
         default: 50
       required: true
   responses:
-    200:
-      description: Requet successfully
+    BookList_200:
+      description: List of books
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessResponse'
+            type: array
+            items:
+              $ref: '#/components/schemas/BookListBody'
+    AuthorList_200:
+      description: List of books
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/AuthorListBody'
     400:
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BadRequest'
+            $ref: '#/components/schemas/BadRequestBody'
     403:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Forbidden'
+            $ref: '#/components/schemas/ForbiddenBody'
     500:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/InternalServerError'
+            $ref: '#/components/schemas/InternalServerErrorBody'
