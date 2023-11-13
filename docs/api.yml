@@ -141,12 +141,12 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/BookList_200'
-          400:
-            $ref: '#/components/responses/400'
-          403:
-            $ref: '#/components/responses/403'
-          500:
-            $ref: '#/components/responses/500'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /books/borrowed:
     get:
       tags:
@@ -157,12 +157,12 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/BookList_200'
-          400:
-            $ref: '#/components/responses/400'
-          403:
-            $ref: '#/components/responses/403'
-          500:
-            $ref: '#/components/responses/500'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /books/available:
     get:
       tags:
@@ -173,13 +173,12 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/BookList_200'
-          400:
-            $ref: '#/components/responses/400'
-          403:
-            $ref: '#/components/responses/403'
-          500:
-            $ref: '#/components/responses/500'
-
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors:
     get:
       summary: Get all authors
@@ -197,7 +196,13 @@ paths:
           required: false
       responses:
         200:
-          $ref: '#/components/responses/AuthorList_200'
+          description: The list of filtered authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
         400:
           $ref: '#/components/responses/400'
         403:
@@ -217,14 +222,20 @@ paths:
               items:
                 $ref: '#/components/schemas/ImportAuthor'
       responses:
-          200:
-            $ref: '#/components/responses/AuthorList_200'
-          400:
-            $ref: '#/components/responses/400'
-          403:
-            $ref: '#/components/responses/403'
-          500:
-            $ref: '#/components/responses/500'
+        200:
+          description: The list of created or updated authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
   /authors/{aId}:
     delete:
       summary: Delete an author
@@ -262,14 +273,14 @@ paths:
             schema:
               $ref: '#/components/schemas/ImportAuthorExcel'
       responses:
-          200:
-            $ref: '#/components/responses/AuthorList_200'
-          400:
-            $ref: '#/components/responses/400'
-          403:
-            $ref: '#/components/responses/403'
-          500:
-            $ref: '#/components/responses/500'
+        200:
+          description: The list of imported authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
   /authors/{page}/{pageSize}:
     get:
       summary: Get a specific page of authors
@@ -368,6 +379,50 @@ paths:
           $ref: '#/components/responses/403'
         500:
           $ref: '#/components/responses/500'
+    paths:
+  /visitors/{visitorId}/activities:
+    get:
+      tags:
+        - Visitors
+      summary: Visitor Activities
+      description: Get borrow and return activities of the specified visitor.
+      operationId: getVisitorActivities
+      parameters:
+        - name: visitorId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: Identifier of the visitor
+        - in: query
+          name: start
+          description: Start date to filter activities (format YYYY-MM-DDTHH:MM:SS)
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: end
+          description: End date to filter activities (format YYYY-MM-DDTHH:MM:SS)
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: List of visitor activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VisitorActivities'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        500:
+          $ref: '#/components/responses/500'
 
 components:
   schemas:
@@ -380,6 +435,36 @@ components:
           type: string
         reference:
           type: string
+    Activity:
+      type: object
+      properties:
+        loanId:
+          type: string
+          description: The ID of the loan made
+        bookId:
+          type: string
+          description: The ID of the borrowed or returned book
+        action:
+          type: string
+          enum:
+            - borrow
+            - return
+          description: | 
+           The action performed: borrowing or returning
+        date:
+          type: string
+          format: date-time
+          description: Date and time of the action
+    VisitorActivities:
+      type: object
+      properties:
+        visitorId:
+          type: string
+          description: ID of the visitor
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
     CrupdateBook:
       type: object
       properties:
@@ -615,7 +700,28 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerErrorBody'
- 
+  
+   
+     
+      
+      
+       
+        
+        
+     
+      
+          
+
+     
+       
+    
+     
+        
+       
+    
+      
+      
+     
  
  
   
