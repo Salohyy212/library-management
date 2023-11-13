@@ -56,6 +56,8 @@ paths:
       tags:
         - Books
       summary: Create or update a list of books
+      security:
+        - oauth2: ['write']
       operationId: crupdateBooks
       requestBody:
         content:
@@ -127,6 +129,8 @@ paths:
   /books/import:
     post:
       summary: Import books
+      security:
+        - oauth2: [ 'write' ]
       tags:
         - Books
       requestBody:
@@ -211,6 +215,8 @@ paths:
           $ref: '#/components/responses/500'
     put:
       summary: Create or update authors
+      security:
+        - oauth2: [ 'write' ]
       operationId: crupdateAuthors
       tags:
         - Authors
@@ -239,6 +245,8 @@ paths:
   /authors/{aId}:
     delete:
       summary: Delete an author
+      security:
+        - oauth2: [ 'write' ]
       operationId: deleteAuthor
       tags:
         - Authors
@@ -261,6 +269,8 @@ paths:
   /authors/import:
     post:
       summary: Import authors
+      security:
+        - oauth2: [ 'write' ]
       tags:
         - Authors
       requestBody:
@@ -327,6 +337,8 @@ paths:
         - Visitors
       summary: Borrow a book
       description: Allows a visitor to borrow a book from the library.
+      security:
+        - admin_key: []
       operationId: borrowBook
       parameters:
         - name: visitorId
@@ -355,6 +367,8 @@ paths:
       tags:
         - Visitors
       summary: Return a book
+      security:
+        - oauth2: [ 'write' ]
       description: Allows a visitor to return a book to the library.
       operationId: returnBook
       parameters:
@@ -385,6 +399,8 @@ paths:
       tags:
         - Visitors
       summary: Visitor Activities
+      security:
+        - oauth2: [ 'write' ]
       description: Get borrow and return activities of the specified visitor.
       operationId: getVisitorActivities
       parameters:
@@ -700,8 +716,45 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerErrorBody'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            read: Read access
+            write: Write access
   
+    
    
+      
+      
+        
+     
+     
+     
+       
+     
+     
+     
+     
+    
+        
+           
+      
+         
+         
+        
+      
+      
+     
+     
+      
+      
+      
+    
+     
      
       
       
